@@ -1,0 +1,27 @@
+---
+version: "3"
+
+services:
+  mariadb:
+    image: mariadb:10.1.22
+    volumes:
+      - maria-data:/var/lib/mysql
+    networks:
+      - backend
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: users
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+  users:
+    image: tinkerwareio/users
+    ports:
+      - "4000:4000"
+    networks:
+      - backend
+    environment:
+      DB_HOST: mariadb
+networks:
+  backend:
+volumes:
+  maria-data:
