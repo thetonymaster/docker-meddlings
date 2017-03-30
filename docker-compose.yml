@@ -7,21 +7,36 @@ services:
     volumes:
       - maria-data:/var/lib/mysql
     networks:
-      - backend
+      - database
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: users
       MYSQL_USER: user
       MYSQL_PASSWORD: user
+  mongodb:
+    image: mongo:3.0.14
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - database
+  engine:
+    image: tinkerwareio/engine
+    networks:
+      - database
+    environment:
+      DB_USER: "engine"
+      DB_PASSWORD: "engine"
+      DB_HOST: mongodb
   users:
     image: tinkerwareio/users
     ports:
       - "4000:4000"
     networks:
-      - backend
+      - database
     environment:
       DB_HOST: mariadb
 networks:
-  backend:
+  database:
 volumes:
   maria-data:
+  mongodb-data:
